@@ -1,5 +1,7 @@
 # RSpec TAP
 
+[![Build Status](https://travis-ci.org/appleton/rspec_tap.svg?branch=master)](https://travis-ci.org/appleton/rspec_tap)
+
 A [TAP](https://testanything.org/) formatter for rspec.
 
 ## Installation
