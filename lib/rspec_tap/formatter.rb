@@ -21,7 +21,6 @@ module RspecTap
 
     def start(notification)
       super(notification)
-      output.puts "TAP version 13"
       output.puts "1..#{notification.count}"
     end
 
@@ -62,20 +61,8 @@ module RspecTap
     end
 
     def diagnostic(notification)
-      message, _, expected, got = notification.message_lines
-
-      yaml = YAML.dump(
-        "message" => message,
-        "severity" => "fail",
-        "data" => {
-          # TODO: this is incorrect
-          # "got" => got.sub(/\s+got\s+/, ""),
-          # "expected" => expected.sub(/\s+expected\s+/, "")
-        },
-        "backtrace" => notification.formatted_backtrace
-      )
-
-      output.puts(prefix(yaml + "..."))
+      message = notification.fully_formatted(nil)
+      output.puts(prefix(message, with: "#"))
     end
 
     def prefix(str, with: "  ")

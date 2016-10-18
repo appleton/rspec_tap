@@ -9,11 +9,6 @@ RSpec.describe RspecTap::Formatter do
   describe "#start" do
     subject(:start) { formatter.start(OpenStruct.new(count: 2)) }
 
-    it "outputs TAP 13" do
-      start
-      expect(output.string).to include("TAP version 13")
-    end
-
     it "outputs a test plan" do
       start
       expect(output.string).to include("1..2")
@@ -73,14 +68,23 @@ RSpec.describe RspecTap::Formatter do
     let(:parent_groups) { [] }
 
     let(:notification) do
-      OpenStruct.new(
-        example: OpenStruct.new(description: "An test"),
-        message_lines: ["Failed for a reason", "", "expected true", "got false"]
-      )
+      Class.new do
+        def example
+          OpenStruct.new(description: "An test")
+        end
+
+        def fully_formatted(number = nil)
+          "A full test error message"
+        end
+      end.new
     end
 
     it { is_expected.to start_with("not ok") }
     it_behaves_like "a test line"
+
+    it "prints the failure message" do
+      expect(output_string).to include(notification.fully_formatted)
+    end
   end
 
   describe "#example_pending" do
