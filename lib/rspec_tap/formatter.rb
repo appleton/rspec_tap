@@ -15,6 +15,13 @@ module RspecTap
       super(stdout)
     end
 
+    def example_group_started(notification)
+      super
+      group = notification.group.to_s.gsub('::', '.')
+      group = group.gsub(/^rspec\.examplegroups\.?/i, '')
+      output.puts "# " + group
+    end
+
     def example_started(notification)
       @progress_count += 1
     end
