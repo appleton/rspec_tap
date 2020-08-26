@@ -25,22 +25,16 @@ module RspecTap
     end
 
     def example_passed(notification)
-      example_line(description: notification.example.description)
+      example_line(notification.example)
     end
 
     def example_failed(notification)
-      example_line(
-        status:      "not ok",
-        description: notification.example.description
-      )
+      example_line(notification.example, status: "not ok")
       diagnostic(notification)
     end
 
     def example_pending(notification)
-      example_line(
-        description: notification.example.description,
-        directive:   "# SKIP"
-      )
+      example_line(notification.example, directive: "# SKIP")
     end
 
     def dump_failures(*args)
@@ -49,13 +43,13 @@ module RspecTap
 
     private
 
-    def example_line(status: "ok", description: "", directive: "")
+    def example_line(example, status: "ok", directive: "")
       output.puts([
         status,
         @progress_count,
         "-",
-        @example_group.parent_groups.reverse.map(&:description).join(" "),
-        description,
+        example.example_group.parent_groups.reverse.map(&:description).join(" "),
+        example.description,
         directive
       ].compact.join(" "))
     end
